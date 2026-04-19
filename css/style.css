@@ -2,39 +2,39 @@
    DESIGN TOKENS
 ═══════════════════════════════════════ */
 :root {
-    --navy: #0D1B2A;
-    --navy-mid: #152336;
-    --navy-soft: #1E3250;
-    --navy-light: #243d62;
-    --accent: #0EA5E9;
-    --accent-dim: rgba(14, 165, 233, .1);
-    --accent-glow: rgba(14, 165, 233, .2);
-    --teal: #14B8A6;
-    --teal-dim: rgba(20, 184, 166, .1);
-    --success: #22C55E;
-    --success-dim: rgba(34, 197, 94, .1);
-    --warn: #F59E0B;
-    --warn-dim: rgba(245, 158, 11, .1);
-    --danger: #EF4444;
-    --danger-dim: rgba(239, 68, 68, .1);
-    --white: #FFFFFF;
-    --surface: #F8FAFC;
-    --surface2: #F1F5F9;
-    --border: #E2E8F0;
-    --border2: #CBD5E1;
-    --muted: #94A3B8;
-    --text: #0F172A;
-    --text2: #475569;
-    --text3: #64748B;
-    --r: 12px;
-    --r-sm: 8px;
-    --r-xs: 5px;
-    --sidebar-w: 252px;
-    --topbar-h: 58px;
-    --sh: 0 1px 3px rgba(0, 0, 0, .08), 0 1px 2px rgba(0, 0, 0, .04);
-    --sh-md: 0 4px 16px rgba(0, 0, 0, .1);
-    --sh-lg: 0 16px 48px rgba(0, 0, 0, .15);
-    --ease: cubic-bezier(.4, 0, .2, 1);
+    --navy: #0f172a;
+    --navy-mid: #1e293b;
+    --navy-soft: #334155;
+    --navy-light: #475569;
+    --accent: #4f46e5;
+    --accent-dim: rgba(79, 70, 229, 0.1);
+    --accent-glow: rgba(79, 70, 229, 0.2);
+    --teal: #0ea5e9;
+    --teal-dim: rgba(14, 165, 233, 0.1);
+    --success: #10b981;
+    --success-dim: rgba(16, 185, 129, 0.1);
+    --warn: #f59e0b;
+    --warn-dim: rgba(245, 158, 11, 0.1);
+    --danger: #ef4444;
+    --danger-dim: rgba(239, 68, 68, 0.1);
+    --white: #ffffff;
+    --surface: #f8fafc;
+    --surface2: #f1f5f9;
+    --border: #e2e8f0;
+    --border2: #cbd5e1;
+    --muted: #94a3b8;
+    --text: #0f172a;
+    --text2: #334155;
+    --text3: #475569;
+    --r: 16px;
+    --r-sm: 10px;
+    --r-xs: 6px;
+    --sidebar-w: 260px;
+    --topbar-h: 60px;
+    --sh: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    --sh-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+    --sh-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    --ease: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 *,
@@ -50,7 +50,7 @@ html {
 }
 
 body {
-    font-family: 'Epilogue', sans-serif;
+    font-family: 'Inter', sans-serif;
     background: var(--surface);
     color: var(--text);
     line-height: 1.55;
@@ -147,7 +147,7 @@ textarea {
 }
 
 .al-brand {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Outfit', sans-serif;
     font-size: 22px;
     font-weight: 800;
     color: #fff;
@@ -179,7 +179,7 @@ textarea {
 }
 
 .al-headline {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Outfit', sans-serif;
     font-size: 40px;
     font-weight: 800;
     color: #fff;
@@ -191,6 +191,7 @@ textarea {
     font-style: normal;
     background: linear-gradient(90deg, var(--accent), var(--teal));
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
@@ -208,7 +209,7 @@ textarea {
 }
 
 .al-stat-n {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Outfit', sans-serif;
     font-size: 26px;
     font-weight: 800;
     color: #fff
@@ -283,7 +284,7 @@ textarea {
 }
 
 .auth-title {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Outfit', sans-serif;
     font-size: 24px;
     font-weight: 800;
     color: var(--navy);
@@ -476,7 +477,9 @@ textarea {
 /* TOPBAR */
 .topbar {
     height: var(--topbar-h);
-    background: var(--navy);
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     display: flex;
     align-items: center;
     padding: 0 20px;
@@ -490,7 +493,7 @@ textarea {
 }
 
 .tb-brand {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Outfit', sans-serif;
     font-size: 18px;
     font-weight: 800;
     color: #fff;
@@ -774,7 +777,7 @@ textarea {
 }
 
 .np-title {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Outfit', sans-serif;
     font-size: 16px;
     font-weight: 700;
     color: var(--navy)
@@ -1134,7 +1137,7 @@ textarea {
 }
 
 .hero-title {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Outfit', sans-serif;
     font-size: 21px;
     font-weight: 800;
     color: #fff;
@@ -1172,7 +1175,7 @@ textarea {
 }
 
 .ph-title {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Outfit', sans-serif;
     font-size: 20px;
     font-weight: 800;
     color: var(--navy);
@@ -1256,7 +1259,7 @@ textarea {
 }
 
 .stat-val {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Outfit', sans-serif;
     font-size: 28px;
     font-weight: 800;
     color: var(--navy);
@@ -1337,6 +1340,12 @@ textarea {
     padding: 20px 22px;
     margin-bottom: 16px;
     box-shadow: var(--sh);
+    transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease), border-color 0.25s var(--ease);
+}
+
+.card:hover {
+    box-shadow: var(--sh-md);
+    border-color: var(--border2);
 }
 
 .card-head {
@@ -1832,11 +1841,12 @@ dl.dl dd {
 }
 
 .score-n {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Outfit', sans-serif;
     font-size: 38px;
     font-weight: 800;
     background: linear-gradient(135deg, var(--accent), var(--teal));
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent
 }
 
@@ -1904,7 +1914,7 @@ dl.dl dd {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Syne', sans-serif;
+    font-family: 'Outfit', sans-serif;
     font-size: 24px;
     font-weight: 800;
     color: var(--navy);
@@ -1929,7 +1939,7 @@ dl.dl dd {
 }
 
 .profile-completion-pct {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Outfit', sans-serif;
     font-size: 18px;
     font-weight: 800;
     color: var(--accent)
@@ -2042,7 +2052,7 @@ dl.dl dd {
 }
 
 .modal-title {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Outfit', sans-serif;
     font-size: 18px;
     font-weight: 800;
     color: var(--navy);
