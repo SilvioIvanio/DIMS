@@ -122,16 +122,22 @@ async function doLogin(){
 }
 
 async function doRegister() {
-    const name = document.getElementById('re-name')?.value || 'New User'; // Form missing name field? DIMS register has tab? Let's check dom later, default to New User for now or we will add name input
-    const email = document.getElementById('re-email').value;
+    const fname = document.getElementById('re-fname').value.trim();
+    const lname = document.getElementById('re-lname').value.trim();
+    const email = document.getElementById('re-email').value.trim();
     const pass = document.getElementById('re-pass').value;
-    if (!email || !pass) { toast('❌ Please fill all fields.'); return; }
+    
+    if (!fname || !lname || !email || !pass) { toast('❌ Please fill all fields.'); return; }
+    const name = fname + ' ' + lname;
 
     let fd = new FormData();
     fd.append('name', name);
     fd.append('email', email);
     fd.append('password', pass);
     fd.append('role', role);
+    fd.append('student_no', document.getElementById('re-student-no').value.trim());
+    fd.append('programme', document.getElementById('re-programme').value);
+    fd.append('year', document.getElementById('re-year').value);
 
     try {
         let res = await fetch('http://localhost/DIMS/api/register.php', { method: 'POST', body: fd });

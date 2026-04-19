@@ -97,20 +97,20 @@
                     <div class="auth-title">Create account</div>
                     <div class="auth-sub">Students register here — staff accounts are created by CEU</div>
                     <div class="f-row">
-                        <div class="f-group"><label class="f-label">First name</label><input class="f-input"
+                        <div class="f-group"><label class="f-label">First name</label><input id="re-fname" class="f-input"
                                 placeholder="e.g. Tjihezu"></div>
-                        <div class="f-group"><label class="f-label">Last name</label><input class="f-input"
+                        <div class="f-group"><label class="f-label">Last name</label><input id="re-lname" class="f-input"
                                 placeholder="e.g. Tjihozu"></div>
                     </div>
-                    <div class="f-group"><label class="f-label">Student number</label><input class="f-input"
+                    <div class="f-group"><label class="f-label">Student number</label><input id="re-student-no" class="f-input"
                             placeholder="e.g. 223127418"></div>
-                    <div class="f-group"><label class="f-label">NUST email address</label><input class="f-input"
+                    <div class="f-group"><label class="f-label">NUST email address</label><input id="re-email" class="f-input"
                             type="email" placeholder="student@nust.na">
                         <div class="f-hint">Must be your official @nust.na email</div>
                     </div>
                     <div class="f-group">
                         <label class="f-label">Programme</label>
-                        <select class="f-select">
+                        <select id="re-programme" class="f-select">
                             <option value="">— Select your programme —</option>
                             <option>BSc Computer Science</option>
                             <option>BSc Information Technology</option>
@@ -123,7 +123,7 @@
                     </div>
                     <div class="f-group">
                         <label class="f-label">Year of study</label>
-                        <select class="f-select">
+                        <select id="re-year" class="f-select">
                             <option>1st Year</option>
                             <option>2nd Year</option>
                             <option selected>3rd Year</option>
@@ -131,9 +131,9 @@
                         </select>
                     </div>
                     <div class="f-row">
-                        <div class="f-group"><label class="f-label">Password</label><input class="f-input"
+                        <div class="f-group"><label class="f-label">Password</label><input id="re-pass" class="f-input"
                                 type="password" placeholder="Min. 8 characters"></div>
-                        <div class="f-group"><label class="f-label">Confirm password</label><input class="f-input"
+                        <div class="f-group"><label class="f-label">Confirm password</label><input id="re-pass-confirm" class="f-input"
                                 type="password" placeholder="Repeat password"></div>
                     </div>
                     <button class="btn-auth" onclick="doRegister()">Create account <span>→</span></button>
