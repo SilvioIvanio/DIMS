@@ -88,7 +88,7 @@
                     <button class="btn-auth" onclick="doLogin()">Sign in <span>→</span></button>
                     <div style="text-align:center;margin-top:14px;font-size:12px;color:var(--muted)">
                         Forgot your password? <a href="#" style="color:var(--accent);font-weight:600"
-                            onclick="toast('📧 Reset link sent to your email.')">Reset it</a>
+                            onclick="toast('📧 Password reset request sent to CEU administrator.')">Reset it</a>
                     </div>
                 </div>
 
@@ -152,7 +152,7 @@
             <div class="tb-divider"></div>
             <span class="tb-role" id="tb-role">Student</span>
             <div class="tb-spacer"></div>
-            <div class="tb-search" onclick="toast('🔍 Global search coming in v1.1')">
+            <div class="tb-search" onclick="globalSearch()">
                 <span>🔍</span> <span>Search…</span> <kbd>⌘K</kbd>
             </div>
             <button class="tb-btn" id="notif-btn" onclick="toggleNotifPanel()">

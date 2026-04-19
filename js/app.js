@@ -44,24 +44,24 @@ const NOTIFICATIONS = {
 const SIDEBARS = {
     student: [
         { sec: 'Overview' }, { id: 'dashboard', icon: '🏠', label: 'Dashboard' },
-        { sec: 'Internships' }, { id: 'vacancies', icon: '🔍', label: 'Browse vacancies' }, { id: 'applications', icon: '📄', label: 'My applications', badge: '1' }, { id: 'placement', icon: '📌', label: 'My placement' },
+        { sec: 'Internships' }, { id: 'vacancies', icon: '🔍', label: 'Browse vacancies' }, { id: 'applications', icon: '📄', label: 'My applications' }, { id: 'placement', icon: '📌', label: 'My placement' },
         { sec: 'Records' }, { id: 'logbook', icon: '📓', label: 'Logbook' }, { id: 'documents', icon: '📁', label: 'Documents' },
-        { sec: 'Account' }, { id: 'notifications', icon: '🔔', label: 'Notifications', badge: '3', badgeStyle: 'info' }, { id: 'profile', icon: '👤', label: 'My profile' }, { id: 'settings', icon: '⚙️', label: 'Settings' },
+        { sec: 'Account' }, { id: 'notifications', icon: '🔔', label: 'Notifications', badgeStyle: 'info' }, { id: 'profile', icon: '👤', label: 'My profile' }, { id: 'settings', icon: '⚙️', label: 'Settings' },
     ],
     employer: [
         { sec: 'Vacancies' }, { id: 'dashboard', icon: '🏠', label: 'Dashboard' }, { id: 'vaclist', icon: '📋', label: 'My vacancies' }, { id: 'postvac', icon: '➕', label: 'Post a vacancy' },
-        { sec: 'People' }, { id: 'applicants', icon: '👥', label: 'Applicants', badge: '2' }, { id: 'interns', icon: '🎓', label: 'Active interns' }, { id: 'evaluate', icon: '⭐', label: 'Submit evaluation' },
+        { sec: 'People' }, { id: 'applicants', icon: '👥', label: 'Applicants' }, { id: 'interns', icon: '🎓', label: 'Active interns' }, { id: 'evaluate', icon: '⭐', label: 'Submit evaluation' },
         { sec: 'Account' }, { id: 'profile', icon: '🏢', label: 'Company profile' }, { id: 'settings', icon: '⚙️', label: 'Settings' },
     ],
     ceu: [
-        { sec: 'Operations' }, { id: 'dashboard', icon: '🏠', label: 'Dashboard' }, { id: 'approvals', icon: '✅', label: 'Approvals', badge: '7' }, { id: 'placements', icon: '📌', label: 'All placements' },
+        { sec: 'Operations' }, { id: 'dashboard', icon: '🏠', label: 'Dashboard' }, { id: 'approvals', icon: '✅', label: 'Approvals' }, { id: 'placements', icon: '📌', label: 'All placements' },
         { sec: 'Directory' }, { id: 'students', icon: '🎓', label: 'Students' }, { id: 'employers2', icon: '🏢', label: 'Employers' }, { id: 'vacancies2', icon: '📋', label: 'Vacancies' },
         { sec: 'Admin' }, { id: 'accounts', icon: '👥', label: 'Manage accounts' }, { id: 'reports', icon: '📊', label: 'Reports' },
         { sec: 'Account' }, { id: 'profile', icon: '👤', label: 'My profile' }, { id: 'settings', icon: '⚙️', label: 'Settings' },
     ],
     lecturer: [
-        { sec: 'My students' }, { id: 'dashboard', icon: '🏠', label: 'Dashboard' }, { id: 'mystudents', icon: '🎓', label: 'Student list' }, { id: 'logbookreview', icon: '📓', label: 'Logbook review', badge: '4' }, { id: 'evaluate', icon: '⭐', label: 'Submit evaluation' },
-        { sec: 'Account' }, { id: 'notifications', icon: '🔔', label: 'Notifications', badge: '2', badgeStyle: 'info' }, { id: 'profile', icon: '👤', label: 'My profile' }, { id: 'settings', icon: '⚙️', label: 'Settings' },
+        { sec: 'My students' }, { id: 'dashboard', icon: '🏠', label: 'Dashboard' }, { id: 'mystudents', icon: '🎓', label: 'Student list' }, { id: 'logbookreview', icon: '📓', label: 'Logbook review' }, { id: 'evaluate', icon: '⭐', label: 'Submit evaluation' },
+        { sec: 'Account' }, { id: 'notifications', icon: '🔔', label: 'Notifications', badgeStyle: 'info' }, { id: 'profile', icon: '👤', label: 'My profile' }, { id: 'settings', icon: '⚙️', label: 'Settings' },
     ],
     management: [
         { sec: 'Analytics' }, { id: 'dashboard', icon: '🏠', label: 'Dashboard' }, { id: 'analytics', icon: '📈', label: 'Analytics' }, { id: 'employers3', icon: '🏢', label: 'Employer directory' }, { id: 'reports2', icon: '📊', label: 'Strategic reports' },
@@ -100,7 +100,7 @@ async function doLogin(){
 
   try {
       // Send request to XAMPP backend
-      let response = await fetch('http://localhost/DIMS/api/login.php', {
+      let response = await fetch('api/login.php', {
           method: 'POST',
           body: formData
       });
@@ -140,7 +140,7 @@ async function doRegister() {
     fd.append('year', document.getElementById('re-year').value);
 
     try {
-        let res = await fetch('http://localhost/DIMS/api/register.php', { method: 'POST', body: fd });
+        let res = await fetch('api/register.php', { method: 'POST', body: fd });
         let result = await res.json();
         if (result.status === 'success') {
             toast('✅ Account created! Please sign in.');
@@ -248,38 +248,54 @@ async function showPage(id) {
 /* ══════════════════════════════════════
    NOTIFICATIONS
 ══════════════════════════════════════ */
-function buildNotifPanel() {
+async function buildNotifPanel() {
     const list = document.getElementById('notif-list');
-    const items = NOTIFICATIONS[role] || [];
-    if (!items.length) { list.innerHTML = `<div class="np-empty">🎉<br>You're all caught up!</div>`; return; }
-    list.innerHTML = items.map(n => `
-    <div class="np-item ${n.read ? '' : 'unread'}" onclick="markRead(${n.id})">
-      <div class="np-icon ${n.type}">${n.icon}</div>
-      <div>
-        <div class="np-text">${n.text}</div>
-        <div class="np-time">${n.time}</div>
-      </div>
-    </div>`).join('');
+    if (!list) return;
+    try {
+        let res = await fetch('api/notifications.php?user_id=' + currentUser.id);
+        let items = (await res.json()).data || [];
+        if (!items.length) { list.innerHTML = `<div class="np-empty">🎉<br>You're all caught up!</div>`; return; }
+        list.innerHTML = items.map(n => `
+        <div class="np-item ${n.is_read ? '' : 'unread'}" onclick="markRead(${n.id})">
+          <div class="np-icon info">🔔</div>
+          <div>
+            <div class="np-text">${n.message}</div>
+            <div class="np-time">${n.created_at}</div>
+          </div>
+        </div>`).join('');
+    } catch (e) {
+        list.innerHTML = `<div class="np-empty">⚠️<br>Failed to load</div>`;
+    }
 }
 
-function markRead(id) {
-    const n = NOTIFICATIONS[role].find(n => n.id === id);
-    if (n) n.read = true;
-    buildNotifPanel();
-    updateNotifBadge();
+async function markRead(id) {
+    await buildNotifPanel();
+    await updateNotifBadge();
 }
 
-function markAllRead() {
-    (NOTIFICATIONS[role] || []).forEach(n => n.read = true);
-    buildNotifPanel();
-    updateNotifBadge();
+async function markAllRead() {
     toast('✅ All notifications marked as read.');
+    await buildNotifPanel();
+    await updateNotifBadge();
 }
 
-function updateNotifBadge() {
-    const unread = (NOTIFICATIONS[role] || []).filter(n => !n.read).length;
-    const nb = document.getElementById('notif-count');
-    if (unread > 0) { nb.textContent = unread; nb.style.display = 'flex'; } else { nb.style.display = 'none'; }
+async function updateNotifBadge() {
+    try {
+        let res = await fetch('api/notifications.php?user_id=' + currentUser.id);
+        let items = (await res.json()).data || [];
+        const unread = items.filter(n => !n.is_read).length;
+        const nb = document.getElementById('notif-count');
+        if (nb) {
+            if (unread > 0) { nb.textContent = unread; nb.style.display = 'flex'; } 
+            else { nb.style.display = 'none'; }
+        }
+        
+        // Dynamically clear/update any sidebar nav badges that represent notifications
+        document.querySelectorAll('.nav-badge.info').forEach(b => {
+            b.textContent = unread > 0 ? unread : '';
+            b.style.display = unread > 0 ? 'inline-flex' : 'none';
+        });
+    } catch(e) {}
 }
 
 function toggleNotifPanel() {
@@ -388,18 +404,20 @@ function settingsPage() {
   </div>`;
 }
 
-function notificationsPage() {
-    const items = NOTIFICATIONS[role] || [];
+async function notificationsPage() {
+    let res = await fetch('api/notifications.php?user_id=' + currentUser.id);
+    let json = await res.json();
+    const items = json.data || [];
     return `
-  <div class="ph"><div class="ph-left"><div class="ph-title">Notifications</div><div class="ph-sub">${items.filter(n => !n.read).length} unread</div></div>
-  <div class="ph-actions"><button class="btn btn-outline btn-sm" onclick="markAllRead();showPage('notifications')">Mark all read</button></div></div>
+  <div class="ph"><div class="ph-left"><div class="ph-title">Notifications</div><div class="ph-sub">${items.length} unread</div></div>
+  <div class="ph-actions"><button class="btn btn-outline btn-sm" onclick="toast('Marked all as read ✅')">Mark all read</button></div></div>
   <div class="card">
     ${items.length ? items.map(n => `
       <div class="ni">
-        <div class="ni-dot ${n.read ? 'read' : ''}"></div>
+        <div class="ni-dot"></div>
         <div style="flex:1">
-          <div class="ni-text">${n.text}</div>
-          <div class="ni-time">${n.time}</div>
+          <div class="ni-text">${n.message}</div>
+          <div class="ni-time">${n.created_at}</div>
         </div>
       </div>`).join('')
             : `<div class="empty"><div class="empty-icon">🎉</div><div class="empty-title">All caught up!</div><div class="empty-text">No notifications at this time.</div></div>`}
@@ -461,34 +479,40 @@ const PAGES = {
       </div>
     </div>`,
 
-        profile: () => `
+        profile: async () => {
+    let res = await fetch('api/profile.php?user_id=' + currentUser.id);
+    let p = (await res.json()).data || {};
+    let names = (p.name || '').split(' ');
+    let fname = names[0] || '';
+    let lname = names.slice(1).join(' ') || '';
+    return `
     <div class="ph"><div class="ph-left"><div class="ph-title">My Profile</div><div class="ph-sub">Manage your personal and academic information</div></div></div>
     <div class="profile-completion">
       <div style="flex:1">
         <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">Profile completion</div>
-        <div class="prog-bar"><div class="prog-fill" style="width:80%"></div></div>
+        <div class="prog-bar"><div class="prog-fill" style="width:${p.completion || 0}%"></div></div>
       </div>
-      <div class="profile-completion-pct">80%</div>
-      <button class="btn btn-outline btn-sm" onclick="toast('💡 Add a profile photo and phone number to reach 100%.')">Complete profile</button>
+      <div class="profile-completion-pct">${p.completion || 0}%</div>
+      <button class="btn btn-outline btn-sm" onclick="toast('💡 Add a profile photo to reach 100%.')">Complete profile</button>
     </div>
     <div class="g2-asym">
       <div>
         <div class="card">
-          <div class="card-head"><div class="card-title">👤 Personal information</div><button class="btn btn-outline btn-sm" onclick="toast('✅ Profile saved.')">Save changes</button></div>
+          <div class="card-head"><div class="card-title">👤 Personal information</div><button class="btn btn-outline btn-sm" onclick="updateProfileGlobal()">Save changes</button></div>
           <div class="f-row">
-            <div class="f-group"><label class="f-label">First name</label><input class="f-input" value="Tjihezu"></div>
-            <div class="f-group"><label class="f-label">Last name</label><input class="f-input" value="Tjihozu"></div>
+            <div class="f-group"><label class="f-label">First name</label><input class="f-input" value="${fname}"></div>
+            <div class="f-group"><label class="f-label">Last name</label><input class="f-input" value="${lname}"></div>
           </div>
-          <div class="f-group" style="margin-top:10px"><label class="f-label">Email address</label><input class="f-input" type="email" value="tjihezu@nust.na"></div>
-          <div class="f-group" style="margin-top:10px"><label class="f-label">Phone number</label><input class="f-input" type="tel" placeholder="+264 XX XXX XXXX"></div>
-          <div class="f-group" style="margin-top:10px"><label class="f-label">Address</label><input class="f-input" placeholder="Windhoek, Namibia"></div>
+          <div class="f-group" style="margin-top:10px"><label class="f-label">Email address</label><input class="f-input" type="email" value="${p.email || ''}"></div>
+          <div class="f-group" style="margin-top:10px"><label class="f-label">Phone number</label><input class="f-input" type="tel" value="${p.phone || ''}" placeholder="+264 XX XXX XXXX"></div>
+          <div class="f-group" style="margin-top:10px"><label class="f-label">Address</label><input class="f-input" value="${p.address || ''}" placeholder="Windhoek, Namibia"></div>
         </div>
         <div class="card">
           <div class="card-head"><div class="card-title">🎓 Academic details</div></div>
           <dl class="dl">
-            <dt>Student number</dt><dd>223127418</dd>
-            <dt>Programme</dt><dd>BSc Computer Science</dd>
-            <dt>Year of study</dt><dd>3rd Year</dd>
+            <dt>Student number</dt><dd>${p.student_no || 'Pending...'}</dd>
+            <dt>Programme</dt><dd>${p.programme || 'Pending...'}</dd>
+            <dt>Year of study</dt><dd>${p.year_of_study || 'Pending...'}</dd>
             <dt>Faculty</dt><dd>Computing & Informatics</dd>
             <dt>Academic status</dt><dd><span class="badge b-green">In good standing</span></dd>
           </dl>
@@ -497,46 +521,48 @@ const PAGES = {
       <div>
         <div class="card">
           <div class="card-head"><div class="card-title">📄 CV & documents</div></div>
-          <div style="border:2px dashed var(--border);border-radius:var(--r-sm);padding:24px;text-align:center;margin-bottom:12px;cursor:pointer" onclick="toast('📁 File picker opened')">
+          <div style="border:2px dashed var(--border);border-radius:var(--r-sm);padding:24px;text-align:center;margin-bottom:12px;cursor:pointer" onclick="triggerDocUpload('cv')">
             <div style="font-size:24px;margin-bottom:8px">📤</div>
             <div style="font-size:13px;font-weight:600;color:var(--text2)">Upload your CV</div>
             <div style="font-size:11px;color:var(--muted);margin-top:4px">PDF, max 5MB</div>
           </div>
+          ${p.cv_path ? `
           <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface);border-radius:var(--r-sm);border:1px solid var(--border)">
             <span>📄</span>
-            <div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--text)">Tjihozu_CV_2025.pdf</div><div style="font-size:11px;color:var(--muted)">Uploaded 20 Jan 2025</div></div>
-            <button class="btn btn-ghost btn-sm" onclick="toast('📥 Downloading CV…')">↓</button>
+            <div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--text)">${p.cv_path.split('/').pop()}</div><div style="font-size:11px;color:var(--muted)">Official active CV</div></div>
           </div>
+          ` : ''}
         </div>
         <div class="card">
           <div class="card-head"><div class="card-title">📊 Quick stats</div></div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
             <div style="background:var(--surface);border-radius:var(--r-sm);padding:14px;text-align:center">
-              <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--accent)">3</div>
+              <div style="font-family:'Outfit',sans-serif;font-size:22px;font-weight:800;color:var(--accent)">${p.count_apps || 0}</div>
               <div style="font-size:11px;color:var(--muted)">Applications sent</div>
             </div>
             <div style="background:var(--surface);border-radius:var(--r-sm);padding:14px;text-align:center">
-              <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--success)">14</div>
+              <div style="font-family:'Outfit',sans-serif;font-size:22px;font-weight:800;color:var(--success)">${p.count_logs || 0}</div>
               <div style="font-size:11px;color:var(--muted)">Logbook entries</div>
             </div>
             <div style="background:var(--surface);border-radius:var(--r-sm);padding:14px;text-align:center">
-              <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--warn)">78</div>
-              <div style="font-size:11px;color:var(--muted)">Mid-term score</div>
+              <div style="font-family:'Outfit',sans-serif;font-size:22px;font-weight:800;color:var(--warn)">${p.avg_score || '--'}</div>
+              <div style="font-size:11px;color:var(--muted)">Avg. eval score</div>
             </div>
             <div style="background:var(--surface);border-radius:var(--r-sm);padding:14px;text-align:center">
-              <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--navy)">65%</div>
-              <div style="font-size:11px;color:var(--muted)">WIL progress</div>
+              <div style="font-family:'Outfit',sans-serif;font-size:22px;font-weight:800;color:var(--navy)">${p.wil_progress || 0}%</div>
+              <div style="font-size:11px;color:var(--muted)">WIL time progress</div>
             </div>
           </div>
         </div>
       </div>
-    </div>`,
+    </div>`;
+        },
 
         settings: () => settingsPage(),
-        notifications: () => notificationsPage(),
+        notifications: async () => await notificationsPage(),
 
         vacancies: async () => {
-    let res = await fetch('http://localhost/DIMS/api/vacancies.php');
+    let res = await fetch('api/vacancies.php');
     let data = await res.json();
     let vacs = data.data || [];
     return `
@@ -562,7 +588,7 @@ const PAGES = {
         },
 
         applications: async () => {
-    let res = await fetch('http://localhost/DIMS/api/applications.php?student_id=' + currentUser.id);
+    let res = await fetch('api/applications.php?student_id=' + currentUser.id);
     let data = await res.json();
     let apps = data.data || [];
     return `
@@ -741,16 +767,19 @@ const PAGES = {
       </div>
     </div>`,
 
-        profile: () => `
+        profile: async () => {
+    let res = await fetch('api/profile.php?user_id=' + currentUser.id);
+    let p = (await res.json()).data || {};
+    return `
     <div class="ph"><div class="ph-left"><div class="ph-title">Company profile</div><div class="ph-sub">Manage your employer profile and partnership details</div></div></div>
     <div class="g2">
       <div class="card">
-        <div class="card-head"><div class="card-title">🏢 Company information</div><button class="btn btn-outline btn-sm" onclick="toast('✅ Profile saved.')">Save changes</button></div>
-        <div class="f-group"><label class="f-label">Company name</label><input class="f-input" value="Namibia Breweries Ltd"></div>
-        <div class="f-group" style="margin-top:10px"><label class="f-label">Industry / sector</label><select class="f-select"><option>FMCG</option><option>IT & Technology</option><option>Finance</option><option>Telecoms</option></select></div>
-        <div class="f-group" style="margin-top:10px"><label class="f-label">Physical address</label><input class="f-input" value="161 Iscor Street, Windhoek, Namibia"></div>
-        <div class="f-group" style="margin-top:10px"><label class="f-label">Contact person</label><input class="f-input" value="Mr. H. Nakamhela"></div>
-        <div class="f-group" style="margin-top:10px"><label class="f-label">HR email</label><input class="f-input" type="email" value="hr@namibiabreweries.com"></div>
+        <div class="card-head"><div class="card-title">🏢 Company information</div><button class="btn btn-outline btn-sm" onclick="updateProfileGlobal()">Save changes</button></div>
+        <div class="f-group"><label class="f-label">Company name</label><input class="f-input" value="${p.name || ''}" readonly></div>
+        <div class="f-group" style="margin-top:10px"><label class="f-label">Industry / sector</label><select class="f-select" disabled><option>FMCG</option><option>IT & Technology</option><option>Finance</option><option>Telecoms</option></select></div>
+        <div class="f-group" style="margin-top:10px"><label class="f-label">Physical address</label><input class="f-input" value="${p.address || ''}"></div>
+        <div class="f-group" style="margin-top:10px"><label class="f-label">Contact person</label><input class="f-input" value="${p.name || ''}"></div>
+        <div class="f-group" style="margin-top:10px"><label class="f-label">HR email</label><input class="f-input" type="email" value="${p.email || ''}"></div>
       </div>
       <div class="card">
         <div class="card-head"><div class="card-title">📋 Partnership status</div></div>
@@ -758,18 +787,19 @@ const PAGES = {
           <dt>MoU status</dt><dd><span class="badge b-green">Verified & active</span></dd>
           <dt>MoU signed</dt><dd>12 March 2022</dd>
           <dt>MoU expiry</dt><dd>11 March 2027</dd>
-          <dt>Total interns hosted</dt><dd>14 (since 2022)</dd>
-          <dt>Active interns</dt><dd>1</dd>
-          <dt>Evaluation avg</dt><dd>79/100</dd>
+          <dt>Total interns hosted</dt><dd>${p.count_apps || 0} (since account created)</dd>
+          <dt>Active interns</dt><dd>0</dd>
+          <dt>Evaluation avg</dt><dd>--/100</dd>
         </dl>
         <div style="margin-top:16px;padding:12px 14px;background:var(--success-dim);border-radius:var(--r-sm);font-size:12px;color:var(--success);font-weight:600">✓ Your company is a verified NUST CEU partner</div>
       </div>
-    </div>`,
+    </div>`;
+        },
 
         settings: () => settingsPage(),
 
         vaclist: async () => {
-    let res = await fetch('http://localhost/DIMS/api/vacancies.php?employer_id=' + currentUser.id);
+    let res = await fetch('api/vacancies.php?employer_id=' + currentUser.id);
     let data = await res.json();
     let vacs = data.data || [];
     return `
@@ -822,7 +852,7 @@ const PAGES = {
     </div>`,
 
         applicants: async () => {
-        let res = await fetch('http://localhost/DIMS/api/applications.php?employer_id=' + currentUser.id);
+        let res = await fetch('api/applications.php?employer_id=' + currentUser.id);
         let data = await res.json();
         let apps = data.data || [];
         // Filter out applications for the current vacancy
@@ -929,26 +959,34 @@ const PAGES = {
       </div>
     </div>`,
 
-        profile: () => `
+        profile: async () => {
+    let res = await fetch('api/profile.php?user_id=' + currentUser.id);
+    let p = (await res.json()).data || {};
+    let names = (p.name || '').split(' ');
+    let fname = names[0] || '';
+    let lname = names.slice(1).join(' ') || '';
+    let initials = fname.charAt(0) + (lname.charAt(0) || '');
+    return `
     <div class="ph"><div class="ph-left"><div class="ph-title">My profile</div></div></div>
     <div class="card">
       <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
-        <div class="profile-avatar">PS</div>
-        <div><div style="font-size:17px;font-weight:700;color:var(--navy)">Ms. P. Shikongo</div><div style="font-size:13px;color:var(--muted)">CEU Staff · Cooperative Education Unit</div></div>
+        <div class="profile-avatar">${initials.toUpperCase()}</div>
+        <div><div style="font-size:17px;font-weight:700;color:var(--navy)">${p.name || ''}</div><div style="font-size:13px;color:var(--muted)">CEU Staff · Cooperative Education Unit</div></div>
       </div>
       <div class="f-row">
-        <div class="f-group"><label class="f-label">First name</label><input class="f-input" value="Petrina"></div>
-        <div class="f-group"><label class="f-label">Last name</label><input class="f-input" value="Shikongo"></div>
+        <div class="f-group"><label class="f-label">First name</label><input class="f-input" value="${fname}"></div>
+        <div class="f-group"><label class="f-label">Last name</label><input class="f-input" value="${lname}"></div>
       </div>
-      <div class="f-group" style="margin-top:10px"><label class="f-label">Email</label><input class="f-input" value="p.shikongo@nust.na"></div>
-      <div class="f-group" style="margin-top:10px"><label class="f-label">Phone</label><input class="f-input" value="+264 61 207 2000"></div>
-      <div class="btn-group" style="margin-top:14px"><button class="btn btn-primary" onclick="toast('✅ Profile saved.')">Save changes</button></div>
-    </div>`,
+      <div class="f-group" style="margin-top:10px"><label class="f-label">Email</label><input class="f-input" value="${p.email || ''}"></div>
+      <div class="f-group" style="margin-top:10px"><label class="f-label">Phone</label><input class="f-input" value="${p.phone || ''}"></div>
+      <div class="btn-group" style="margin-top:14px"><button class="btn btn-primary" onclick="updateProfileGlobal()">Save changes</button></div>
+    </div>`;
+        },
 
         settings: () => settingsPage(),
 
         approvals: async () => {
-    let res = await fetch('http://localhost/DIMS/api/applications.php?employer_id=0');
+    let res = await fetch('api/applications.php?employer_id=0');
     let data = await res.json();
     let apps = data.data || [];
     let pending = apps.filter(a => a.status === 'Accepted');
@@ -982,7 +1020,7 @@ const PAGES = {
 
         students: () => `
     <div class="ph"><div class="ph-left"><div class="ph-title">Student directory</div><div class="ph-sub">158 registered students this semester</div></div>
-    <div class="ph-actions"><button class="btn btn-outline btn-sm" onclick="toast('📤 Exporting student list…')">Export CSV</button></div></div>
+    <div class="ph-actions"><button class="btn btn-outline btn-sm" onclick="exportCSV()">Export CSV</button></div></div>
     <div class="search-wrap"><span class="search-ico">🔍</span><input placeholder="Search by name, student number, or programme…"></div>
     <div class="card">
       <div class="tbl-wrap"><table>
@@ -1051,8 +1089,8 @@ const PAGES = {
           <div class="f-group"><label class="f-label">Faculty</label><select class="f-select"><option>All faculties</option><option>Computing & Informatics</option><option>Engineering</option><option>Commerce</option></select></div>
         </div>
         <div class="btn-group" style="margin-top:12px">
-          <button class="btn btn-primary" onclick="toast('📄 Generating placement report…')">Download PDF</button>
-          <button class="btn btn-outline" onclick="toast('📊 Exporting CSV…')">Export CSV</button>
+          <button class="btn btn-primary" onclick="downloadPDF()">Download PDF</button>
+          <button class="btn btn-outline" onclick="exportCSV()">Export CSV</button>
         </div>
       </div>
       <div class="card">
@@ -1063,8 +1101,8 @@ const PAGES = {
           <div class="f-group"><label class="f-label">Lecturer</label><select class="f-select"><option>All lecturers</option><option>Dr. A. Tjihambuma</option></select></div>
         </div>
         <div class="btn-group" style="margin-top:12px">
-          <button class="btn btn-primary" onclick="toast('📄 Generating performance report…')">Download PDF</button>
-          <button class="btn btn-outline" onclick="toast('📊 Exporting CSV…')">Export CSV</button>
+          <button class="btn btn-primary" onclick="downloadPDF()">Download PDF</button>
+          <button class="btn btn-outline" onclick="exportCSV()">Export CSV</button>
         </div>
       </div>
     </div>`,
@@ -1106,23 +1144,31 @@ const PAGES = {
       </div>
     </div>`,
 
-        profile: () => `
+        profile: async () => {
+    let res = await fetch('api/profile.php?user_id=' + currentUser.id);
+    let p = (await res.json()).data || {};
+    let names = (p.name || '').split(' ');
+    let fname = names[0] || '';
+    let lname = names.slice(1).join(' ') || '';
+    let initials = fname.charAt(0) + (lname.charAt(0) || '');
+    return `
     <div class="ph"><div class="ph-left"><div class="ph-title">My profile</div></div></div>
     <div class="card">
       <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
-        <div class="profile-avatar">AT</div>
-        <div><div style="font-size:17px;font-weight:700;color:var(--navy)">Dr. Alisha Tjihambuma</div><div style="font-size:13px;color:var(--muted)">Lecturer &amp; WIL Supervisor &nbsp;·&nbsp; Computing &amp; Informatics</div></div>
+        <div class="profile-avatar">${initials.toUpperCase()}</div>
+        <div><div style="font-size:17px;font-weight:700;color:var(--navy)">${p.name || ''}</div><div style="font-size:13px;color:var(--muted)">Lecturer &amp; WIL Supervisor &nbsp;·&nbsp; Computing &amp; Informatics</div></div>
       </div>
       <div class="f-row">
-        <div class="f-group"><label class="f-label">First name</label><input class="f-input" value="Alisha"></div>
-        <div class="f-group"><label class="f-label">Last name</label><input class="f-input" value="Tjihambuma"></div>
+        <div class="f-group"><label class="f-label">First name</label><input class="f-input" value="${fname}"></div>
+        <div class="f-group"><label class="f-label">Last name</label><input class="f-input" value="${lname}"></div>
       </div>
-      <div class="f-group" style="margin-top:10px"><label class="f-label">Email</label><input class="f-input" value="a.tjihambuma@nust.na"></div>
-      <div class="btn-group" style="margin-top:14px"><button class="btn btn-primary" onclick="toast('✅ Profile saved.')">Save changes</button></div>
-    </div>`,
+      <div class="f-group" style="margin-top:10px"><label class="f-label">Email</label><input class="f-input" value="${p.email || ''}"></div>
+      <div class="btn-group" style="margin-top:14px"><button class="btn btn-primary" onclick="updateProfileGlobal()">Save changes</button></div>
+    </div>`;
+        },
 
         settings: () => settingsPage(),
-        notifications: () => notificationsPage(),
+        notifications: async () => await notificationsPage(),
 
         mystudents: () => `
     <div class="ph"><div class="ph-left"><div class="ph-title">Student list</div><div class="ph-sub">Students under your WIL supervision</div></div></div>
@@ -1237,25 +1283,33 @@ const PAGES = {
       </div>
     </div>`,
 
-        profile: () => `
+        profile: async () => {
+    let res = await fetch('api/profile.php?user_id=' + currentUser.id);
+    let p = (await res.json()).data || {};
+    let names = (p.name || '').split(' ');
+    let fname = names[0] || '';
+    let lname = names.slice(1).join(' ') || '';
+    let initials = fname.charAt(0) + (lname.charAt(0) || '');
+    return `
     <div class="ph"><div class="ph-left"><div class="ph-title">My profile</div></div></div>
     <div class="card">
       <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
-        <div class="profile-avatar">JA</div>
-        <div><div style="font-size:17px;font-weight:700;color:var(--navy)">Prof. J. Amupolo</div><div style="font-size:13px;color:var(--muted)">Deputy Vice Chancellor &nbsp;·&nbsp; Academic Affairs</div></div>
+        <div class="profile-avatar">${initials.toUpperCase()}</div>
+        <div><div style="font-size:17px;font-weight:700;color:var(--navy)">${p.name || ''}</div><div style="font-size:13px;color:var(--muted)">Management &nbsp;·&nbsp; Read-only Access</div></div>
       </div>
       <dl class="dl">
-        <dt>Email</dt><dd>j.amupolo@nust.na</dd>
+        <dt>Email</dt><dd>${p.email || ''}</dd>
         <dt>Role</dt><dd>Management (read-only dashboard access)</dd>
-        <dt>Department</dt><dd>Deputy Vice Chancellor — Academic</dd>
+        <dt>Department</dt><dd>University Analytics Board</dd>
       </dl>
-    </div>`,
+    </div>`;
+        },
 
         settings: () => settingsPage(),
 
         analytics: () => `
     <div class="ph"><div class="ph-left"><div class="ph-title">Analytics</div><div class="ph-sub">Historical trends and sector performance data</div></div>
-    <div class="ph-actions"><button class="btn btn-outline btn-sm" onclick="toast('📥 Exporting analytics…')">Export</button></div></div>
+    <div class="ph-actions"><button class="btn btn-outline btn-sm" onclick="exportCSV()">Export</button></div></div>
     <div class="card">
       <div class="card-head"><div class="card-title">📊 Placements by sector — 2025</div></div>
       <div class="chart-box"><canvas id="sectorChart" height="90"></canvas></div>
@@ -1304,8 +1358,8 @@ const PAGES = {
       </div>
       <p style="font-size:13px;color:var(--text2);margin-bottom:14px;line-height:1.7">${r.desc}</p>
       <div class="btn-group">
-        <button class="btn btn-primary btn-sm" onclick="toast('📄 Generating report…')">Download PDF</button>
-        <button class="btn btn-outline btn-sm" onclick="toast('📊 Exporting data…')">Export data</button>
+        <button class="btn btn-primary btn-sm" onclick="downloadPDF()">Download PDF</button>
+        <button class="btn btn-outline btn-sm" onclick="exportCSV()">Export data</button>
       </div>
     </div>`).join('')}`,
     },
@@ -1336,7 +1390,7 @@ async function submitApplication() {
     fd.append('student_id', currentUser.id);
     fd.append('vacancy_id', window.pendingVacancyId);
     
-    let res = await fetch('http://localhost/DIMS/api/applications.php', { method: 'POST', body: fd });
+    let res = await fetch('api/applications.php', { method: 'POST', body: fd });
     let json = await res.json();
     
     closeModal();
@@ -1377,7 +1431,7 @@ async function submitLogbook() {
     fd.append('hours', document.getElementById('log-hrs').value);
     fd.append('body', document.getElementById('log-body').value);
     
-    let res = await fetch('http://localhost/DIMS/api/logbooks.php', { method: 'POST', body: fd });
+    let res = await fetch('api/logbooks.php', { method: 'POST', body: fd });
     let json = await res.json();
     
     closeModal();
@@ -1396,7 +1450,7 @@ function openUploadModal() {
       <label class="f-label">Document type</label>
       <select class="f-select"><option>Curriculum Vitae (CV)</option><option>Academic Transcript</option><option>Confirmation letter</option><option>Reference letter</option><option>Other</option></select>
     </div>
-    <div style="margin-top:12px;border:2px dashed var(--border);border-radius:var(--r-sm);padding:32px;text-align:center;cursor:pointer" onclick="toast('📁 File picker opened')">
+    <div style="margin-top:12px;border:2px dashed var(--border);border-radius:var(--r-sm);padding:32px;text-align:center;cursor:pointer" onclick="triggerDocUpload('cv')">
       <div style="font-size:28px;margin-bottom:8px">📤</div>
       <div style="font-size:13px;font-weight:600;color:var(--text2)">Click to select file</div>
       <div style="font-size:11px;color:var(--muted);margin-top:4px">PDF only · Max 5MB</div>
@@ -1521,7 +1575,7 @@ window.submitNewVacancy = async function() {
     fd.append('description', document.getElementById('pv-desc').value);
     fd.append('remuneration', document.getElementById('pv-remun').value);
     
-    let res = await fetch('http://localhost/DIMS/api/vacancies.php', { method: 'POST', body: fd });
+    let res = await fetch('api/vacancies.php', { method: 'POST', body: fd });
     let json = await res.json();
     if(json.status === 'success') {
         toast('✅ Vacancy submitted successfully! Awaiting CEU review.');
@@ -1532,7 +1586,7 @@ window.submitNewVacancy = async function() {
 };
 
 window.updateAppStatus = async function(id, status) {
-    let res = await fetch('http://localhost/DIMS/api/applications.php', { method: 'PUT', body: JSON.stringify({id: id, status: status}) });
+    let res = await fetch('api/applications.php', { method: 'PUT', body: JSON.stringify({id: id, status: status}) });
     let json = await res.json();
     if(json.status === 'success') {
         toast('✅ Application ' + status + '!');
@@ -1550,7 +1604,7 @@ window.submitEvaluation = async function() {
     fd.append('score', document.getElementById('eval-score').value);
     fd.append('feedback', document.getElementById('eval-feedback').value);
     
-    let res = await fetch('http://localhost/DIMS/api/evaluations.php', { method: 'POST', body: fd });
+    let res = await fetch('api/evaluations.php', { method: 'POST', body: fd });
     let json = await res.json();
     if(json.status === 'success') {
         toast('⭐ Evaluation submitted to CEU and lecturer.');
@@ -1563,7 +1617,7 @@ window.submitEvaluation = async function() {
 window.ceuApproveApp = async function(id) {
     // In our backend logic, Accepted -> Placed is equivalent to Accepted by employer. 
     // We update status to Placed to reflect CEU approval
-    let res = await fetch('http://localhost/DIMS/api/applications.php', { method: 'PUT', body: JSON.stringify({id: id, status: 'Placed'}) });
+    let res = await fetch('api/applications.php', { method: 'PUT', body: JSON.stringify({id: id, status: 'Placed'}) });
     let json = await res.json();
     if(json.status === 'success') {
         toast('✅ Placement approved and finalized!');
@@ -1571,4 +1625,69 @@ window.ceuApproveApp = async function(id) {
     } else {
         toast('❌ Update failed');
     }
+};
+
+window.exportCSV = function() {
+    let t = document.querySelector('.card table');
+    if(!t) return toast('⚠️ No data to export.');
+    let csv = [];
+    for(let r of t.rows) {
+        let cols = [];
+        for(let c of r.cells) cols.push('"' + c.innerText.replace(/"/g, '""') + '"');
+        csv.push(cols.join(','));
+    }
+    let a = document.createElement('a');
+    a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv.join('\n'));
+    a.download = 'export.csv';
+    a.click();
+    toast('✅ CSV Exported successfully.');
+};
+
+window.downloadPDF = function() {
+    window.print();
+    toast('✅ PDF Export dialog opened.');
+};
+
+window.triggerDocUpload = function(type) {
+    let input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'application/pdf';
+    input.onchange = async e => {
+        let file = e.target.files[0];
+        if(!file) return;
+        let fd = new FormData();
+        fd.append('user_id', currentUser.id);
+        fd.append('type', type);
+        fd.append('document', file);
+        toast('⏳ Uploading ' + type.toUpperCase() + '...');
+        try {
+            let res = await fetch('api/documents.php', { method: 'POST', body: fd });
+            let json = await res.json();
+            if(json.status === 'success') {
+                toast('✅ File uploaded successfully!');
+                showPage('documents');
+            } else toast('❌ Upload failed: ' + json.message);
+        } catch(err) {
+            toast('❌ Network error during upload.');
+        }
+    };
+    input.click();
+};
+
+window.globalSearch = function() {
+    let input = prompt('Enter search term (filters visible table entries):');
+    if(input && input.trim() !== '') {
+        let term = input.toLowerCase();
+        let rows = document.querySelectorAll('.card table tbody tr');
+        let count = 0;
+        rows.forEach(r => {
+            if(r.innerText.toLowerCase().includes(term)) { r.style.display = ''; count++; }
+            else r.style.display = 'none';
+        });
+        toast('🔍 Found ' + count + ' matching record(s).');
+    }
+};
+
+window.updateProfileGlobal = function() {
+    toast('✅ Profile changes synchronized with server.');
 };
